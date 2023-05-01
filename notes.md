@@ -177,5 +177,92 @@ We'd like to know if our functions are written correctly, even when you make cha
         By now, we'll use the second way
 
 ## Writing slightly more difficult tests
+For writing more difficult tests, we'll use now the `employee.py` file now, which it has a sample Employee class.
 
+1. Create a new file called `test_employee` and import `unittest` and the class `employee`:
+    ```python
+    import unittest
+    from employee import Employee
+    ```
+
+2. Create the `TestEmployee` class for our tests:
+    ```python
+    class TestEmployee(unittest.TestCase)
+    ```
+3. Inside of `TestEmployee` create the `test_email` function which creates two employees, and when they are created we should inmediately be able to have access to their email property:
+    ```python
+    def test_email(self):
+        emp_1 = Employee('Corey', 'Schafer', 50000)
+        emp_2 = Employee('Sue', 'Smith', 60000)
+
+        self.assertEqual(emp_1.email, 'Corey.Schafer@email.com')
+        self.assertEqual(emp_2.email, 'Sue.Smith@email.com')
+
+        emp_1.first = 'John'
+        emp_2.first = 'Jane'
+
+        self.assertEqual(emp_1.email, 'John.Schafer@email.com')
+        self.assertEqual(emp_2.email, 'Jane.Smith@email.com')
+    ```
+
+4. Add the `test_fullname` function which tests the `fullname` method from the class `employee`:
+    ```python
+    def test_fullname(self):
+        emp_1 = Employee('Corey', 'Schafer', 50000)
+        emp_2 = Employee('Sue', 'Smith', 60000)
+
+        self.assertEqual(emp_1.fullname, 'Corey Schafer')
+        self.assertEqual(emp_2.fullname, 'Sue Smith')
+
+        emp_1.first = 'John'
+        emp_2.first = 'Jane'
+
+        self.assertEqual(emp_1.fullname, 'John Schafer')
+        self.assertEqual(emp_2.fullname, 'Jane Smith')
+    ```
+
+5. Add the `test_apply_raise` function which tests the `apply_raise` method from the class `employee`:
+    ```python
+    def test_apply_raise(self):
+        emp_1 = Employee('Corey', 'Schafer', 50000)
+        emp_2 = Employee('Sue', 'Smith', 60000)
+
+        emp_1.apply_raise()
+        emp_2.apply_raise()
+
+        self.assertEqual(emp_1.pay, 52500)
+        self.assertEqual(emp_2.pay, 63000)
+    ```
+
+6. And finally:
+    ```python
+    if __name__ == '__main__':
+      unittest.main()
+    ```
+
+Our tests are working correctly as expected, but if you watch carefully, you'll notice that every function is creating two employees again, and again, and again. Can you imagine what would happen if we need to change the name for every employee? Fortunately, there is a way for optimizing this:
+
+1. Create new functions called `setUp` and `tearDown` like this:
+    ```python
+    def setUp(self):
+        pass
+    
+    def tearDown(self):
+        pass
+    ```
+    - `setUp()` will run its code before every single test
+    - `tearDown()` will run its code after every single test.
+    Both of them need the exact names in order to be executed.
+
+2. Copy the `emp_1` and `emp_2` isnside `setUp` and set them as instance attributes:
+    ```python
+    def setUp(self):
+        self.emp_1 = Employee('Corey', 'Schafer', 50000)
+        self.emp_2 = Employee('Sue', 'Smith', 60000)
+    ```
+    And now delete every employee created in every function, because we have them now inside `setUp`.
+
+3. Finally, to every reference to `emp_1` and `emp_2` in the test, add `self.` at the beggining of them in order to call the variables correctly and delete the creation of them.
+
+4. `tearDown` is also useful! Like for example, imagine that inside `setUp` you create a directory in order to save files for the tests, or a database, and with `tearDown` you can delete that database or directory
 
