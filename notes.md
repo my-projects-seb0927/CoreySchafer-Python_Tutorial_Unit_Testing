@@ -48,6 +48,7 @@ We'd like to know if our functions are written correctly, even when you make cha
     class TestCalc(unittest.TestCase):
     ```
     - `unittest.TestCase` Is going to give us access to a different testing capabilites within that class. These are just an example:
+
     |Method|Checks that|
     |------|-----------|
     |`assertAlmostEqual(a, b)`|`round(a-b, 7) == 0`|
@@ -179,7 +180,7 @@ We'd like to know if our functions are written correctly, even when you make cha
 ## Writing slightly more difficult tests
 For writing more difficult tests, we'll use now the `employee.py` file now, which it has a sample Employee class.
 
-1. Create a new file called `test_employee` and import `unittest` and the class `employee`:
+1. Create a new file called *test_employee.py* and import `unittest` and the class `employee`:
     ```python
     import unittest
     from employee import Employee
