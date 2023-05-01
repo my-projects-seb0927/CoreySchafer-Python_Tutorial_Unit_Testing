@@ -288,3 +288,51 @@ What happens if we need to run code at the beginning of our test file? Or some c
     - `setUpClass` and `tearDownClass` do basically the same as the ones before, but these one are executed at the very beginning/ending of the *test_employee.py* file. This can be useful for example for reading databases so we have the entire data loaded for our tests.
 
 ### Mocking
+Mocking is used to prevent an error inside a test when we are using an auxiliar function (Let's say, pulling down information from a website). If the website is down, the test is going to give us error, but in this case is not the function's fault. In order to prevent this:
+
+1. Add the next piece of code to *employee.py*:
+    ```python
+    import request
+
+    #[...]
+
+    ##### Mocking #####
+    def monthly_schedule(self, month):
+        response = requests.get(f'http://company.com/{self.last}/{month}')
+        if response.ok:
+            return response.text
+        else:
+            return 'Bad Response!'
+    ```
+    In this case, `monthly_schedule` depends on the information from the website. That information is something that we would want to mock because we don't want the success of our function depends on the website.
+
+2. Import patch in *test_employee.py*:
+    ```python
+    from unittest.mock import patch
+    ```
+
+3. Create a new test with the name of `test_monthly_schedule`
+
+4. In this case, we'll use patch as a context manager, like this:
+    ```python
+    def test_monthly_schedule(self):
+        with patch('employee.requests.get') as mocked_get:
+            mocked_get.return_value.ok = True
+            mocked_get.return_value.text = 'Success'
+
+            schedule = self.emp_1.monthly_schedule('May')
+            mocked_get.assert_called_with('http://company.com/Schafer/May')
+            self.assertEqual(schedule, 'Success')
+
+            mocked_get.return_value.ok = True
+
+            schedule = self.emp_1.monthly_schedule('June')
+            mocked_get.assert_called_with('http://company.com/Smith/June')
+            self.assertEqual(schedule, 'Bad Respose!')
+             
+    ```
+    - In this case, we are saying that we want to mock `request.get` from `employee` as `mocked_get`
+
+    ## Best practices for testing
+    - Tests should be isolated.
+    - You should do **test-driven development**. That means that the tests are developed before starting coding, and after that you start coding so it passes the tests.
