@@ -324,11 +324,11 @@ Mocking is used to prevent an error inside a test when we are using an auxiliar 
             mocked_get.assert_called_with('http://company.com/Schafer/May')
             self.assertEqual(schedule, 'Success')
 
-            mocked_get.return_value.ok = True
+            mocked_get.return_value.ok = False
 
-            schedule = self.emp_1.monthly_schedule('June')
+            schedule = self.emp_2.monthly_schedule('June')
             mocked_get.assert_called_with('http://company.com/Smith/June')
-            self.assertEqual(schedule, 'Bad Respose!')
+            self.assertEqual(schedule, 'Bad Response!')
              
     ```
     - In this case, we are saying that we want to mock `request.get` from `employee` as `mocked_get`
