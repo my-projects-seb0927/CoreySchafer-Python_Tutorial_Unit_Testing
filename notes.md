@@ -267,3 +267,24 @@ Our tests are working correctly as expected, but if you watch carefully, you'll 
 
 4. `tearDown` is also useful! Like for example, imagine that inside `setUp` you create a directory in order to save files for the tests, or a database, and with `tearDown` you can delete that database or directory
 
+> It's important to notice that the tests are not ran sequentially, so it's better if you have them isolated
+
+### How to have code running at the beginning of the test file?
+What happens if we need to run code at the beginning of our test file? Or some cleanup code for cleaning after our tests have ran?. You can do it with two methods: `setUpClass` and `tearDownClass`
+
+> In this section, we've added print statements to the code so you can see how this works ;)
+
+1. Go back to *test_employee.py* and copy the next code and paste inside `TestEmployee`:
+    ```python
+    @classmethod
+    def setUpClass(cls):
+      print('setupClass')
+
+    @classmethod
+    def tearDownClass(cls):
+      print('teardownClass')
+    ```
+    - `@classMethid`: It's indicating that we are working with the class rather than the instance of the class
+    - `setUpClass` and `tearDownClass` do basically the same as the ones before, but these one are executed at the very beginning/ending of the *test_employee.py* file. This can be useful for example for reading databases so we have the entire data loaded for our tests.
+
+### Mocking
